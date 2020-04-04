@@ -55,11 +55,15 @@ public class ViewController {
 
     @PostMapping("/reset-result")
     public String resetPasswordReset(@ModelAttribute ResetPasswordModel resetPasswordModel) {
-        String id = verifyService.verifyCode(resetPasswordModel.getUuid(), resetPasswordModel.getCode());
-        if (!id.equals(StringUtils.EMPTY)) {
-            String idEncoded = Base64.getEncoder().encodeToString(id.getBytes());
+        String idAndType = verifyService.verifyCodeType(resetPasswordModel.getUuid(), resetPasswordModel.getCode());
+        String[] split = idAndType.split(":");
+        if (!split[0].equals(StringUtils.EMPTY)) {
+            String idEncoded = Base64.getEncoder().encodeToString(split[0].getBytes());
             String passEncoded = Base64.getEncoder().encodeToString(resetPasswordModel.getPass().getBytes());
-            ErrorCodes errorCodes = adminClient.resetPassword(idEncoded.concat(":").concat(passEncoded));
+            ErrorCodes errorCodes = ErrorCodes.UNKNOWN;
+            if ("ADMIN".equals(split[1])) {
+                errorCodes = adminClient.resetPassword(idEncoded.concat(":").concat(passEncoded));
+            }
             if (errorCodes == ErrorCodes.SUCCESS) {
                 return "successResetPassword";
             } else {

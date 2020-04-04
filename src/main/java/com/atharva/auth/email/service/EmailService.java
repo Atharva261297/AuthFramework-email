@@ -53,7 +53,7 @@ public class EmailService {
         return ErrorCodes.SUCCESS;
     }
 
-    public ErrorCodes sendResetPassword(String email, String userId, String projectName) throws IOException, MessagingException, NoSuchAlgorithmException {
+    public ErrorCodes sendResetPassword(String email, String userId, String projectName, String type) throws IOException, MessagingException, NoSuchAlgorithmException {
         MimeMessage msg = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(msg, "utf-8");
         helper.setTo(email);
@@ -63,7 +63,7 @@ public class EmailService {
         BufferedReader br = new BufferedReader(new InputStreamReader(resourceLoader.getResource("classpath:templates/emails/reset-password.html").getInputStream()));
         br.lines().forEach(text::append);
         String msgText = text.toString();
-        String uuid = verifyService.createUuid(userId);
+        String uuid = verifyService.createUuidType(userId, type);
         msgText = msgText.replace("{appName}", projectName)
                 .replace("{userId}", userId)
                 .replace("{code}", verifyService.createCode(uuid))

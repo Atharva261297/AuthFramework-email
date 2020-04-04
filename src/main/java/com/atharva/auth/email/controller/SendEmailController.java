@@ -18,14 +18,23 @@ public class SendEmailController {
 
     @GetMapping("/verify-email/{email}/{userId}/{projectName}")
     public ErrorCodes verifyEmail(@PathVariable(name = "email") String email, @PathVariable(name = "userId") String userId,
-                                  @PathVariable(name = "projectName") String projectName) throws IOException, MessagingException, NoSuchAlgorithmException {
+                                  @PathVariable(name = "projectName") String projectName)
+            throws IOException, MessagingException, NoSuchAlgorithmException {
         return emailService.sendVerificationEmail(email, userId, projectName);
     }
 
-    @GetMapping("/reset-password/{email}/{userId}/{projectName}")
-    public ErrorCodes resetPassword(@PathVariable(name = "email") String email, @PathVariable(name = "userId") String userId,
-                                @PathVariable(name = "projectName") String projectName) throws IOException, MessagingException, NoSuchAlgorithmException {
-        return emailService.sendResetPassword(email, userId, projectName);
+    @GetMapping("/admin/reset-password/{email}/{userId}/{projectName}")
+    public ErrorCodes resetPasswordAdmin(@PathVariable(name = "email") String email, @PathVariable(name = "userId") String userId,
+                                @PathVariable(name = "projectName") String projectName)
+            throws IOException, MessagingException, NoSuchAlgorithmException {
+        return emailService.sendResetPassword(email, userId, projectName, "ADMIN");
+    }
+
+    @GetMapping("/user/reset-password/{email}/{userId}/{projectName}")
+    public ErrorCodes resetPasswordUser(@PathVariable(name = "email") String email, @PathVariable(name = "userId") String userId,
+                                    @PathVariable(name = "projectName") String projectName)
+            throws IOException, MessagingException, NoSuchAlgorithmException {
+        return emailService.sendResetPassword(email, userId, projectName, "USER");
     }
 
 }

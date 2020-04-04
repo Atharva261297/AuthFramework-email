@@ -18,11 +18,20 @@ public class VerifyService {
 
     private Map<String, String> uuidCodeMap = new HashMap<>();
     private Map<String, String> uuidIdMap = new HashMap<>();
+    private Map<String, String> uuidTypeMap = new HashMap<>();
 
     String createUuid(String id) throws NoSuchAlgorithmException {
         String uuid = UUID.randomUUID().toString();
         uuidIdMap.put(uuid, id);
         uuidCodeMap.put(uuid, getCode());
+        return uuid;
+    }
+
+    String createUuidType(String id, String type) throws NoSuchAlgorithmException {
+        String uuid = UUID.randomUUID().toString();
+        uuidIdMap.put(uuid, id);
+        uuidCodeMap.put(uuid, getCode());
+        uuidTypeMap.put(uuid, type);
         return uuid;
     }
 
@@ -35,6 +44,16 @@ public class VerifyService {
         if (codeFromMap.equals(code)) {
             uuidCodeMap.remove(uuid, code);
             return uuidIdMap.remove(uuid);
+        } else {
+            return StringUtils.EMPTY;
+        }
+    }
+
+    public String verifyCodeType(String uuid, String code) {
+        String codeFromMap = uuidCodeMap.getOrDefault(uuid, StringUtils.EMPTY);
+        if (codeFromMap.equals(code)) {
+            uuidCodeMap.remove(uuid, code);
+            return uuidIdMap.remove(uuid) + ":" + uuidTypeMap.remove(uuid);
         } else {
             return StringUtils.EMPTY;
         }

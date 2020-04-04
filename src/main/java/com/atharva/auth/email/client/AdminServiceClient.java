@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "AdminClient", url = "${url.admin}")
 public interface AdminServiceClient {
 
-    @RequestMapping(method =  RequestMethod.GET, value = "/email/verify/{userId}")
+    @RequestMapping(method =  RequestMethod.GET, value = "/auth/verify/{userId}")
     ErrorCodes adminVerified(@PathVariable(name = "userId") String userId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/auth/reset")
+    @RequestMapping(method = RequestMethod.POST, value = "/auth/reset")
     ErrorCodes resetPassword(@RequestHeader String admin_auth);
 }
